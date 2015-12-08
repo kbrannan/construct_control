@@ -4,24 +4,41 @@
 # transparency
 # created Kevin Brannan 2015-12-08
 
-# meteo data
-
-# simulation period determined from updated meteo data
+# simulation period determined from updated meteo data. The files are in a 
+# zipfile. The HSPF UCI file for the extended simulation period is extracted 
+# from the zipfile and the begin and end dates of the simulation are taken from
+# this UCI file
+# zipfile path and name
 tmp.dir <- "M:/Models/Bacteria/HSPF/TetraTech20150211 WDM file extension/"
 tmp.zip <- "HSPF&WDMfiles.zip"
+
+# get list of files in the zipfile
 tmp.fns <- unzip(zipfile = paste0(tmp.dir,tmp.zip), list = TRUE)
-## gsub(".*/","", grep("*.extend.*\\.uci$", tmp.fns[ , 1], value=TRUE))
+
+# read the uci file for the extended simulation period in as a character vector
 tmp.uci <- scan(unz(paste0(tmp.dir,tmp.zip),
                     grep("*.extend.*\\.uci$", tmp.fns[ , 1], value=TRUE)
                     )
                 , sep = "\n", what = character()
                 )
-grep("START",tmp.uci, value=TRUE)
 
+# get the line in the UCI that has the begin and end dates of the simulation
+tmp.str <- grep("START", tmp.uci, value=TRUE)
 
-list2env(setNames(lapply(fns, read.csv, row.names = 1), basename(tools::file_path_sans_ext(fns))), globalenv())
+# get begin date
+dt.sim.bg <- as.POSIXct(
+  gsub("/","-",
+       gsub("((\\s{1,})|([aA-zZ]))", "",
+            gsub("( ){,1}00:00.*END.*$","",tmp.str))))
 
-dt.sim.bg <- as.POSIXct("1995-10-01")
-dt.sim.ed <- as.POSIXct("2014-05-30")
+# get end date
+dt.sim.ed <- as.POSIXct(
+  gsub("/","-",
+       gsub("((\\s{1,})|(24:00))","",
+            gsub(".*END","",tmp.str))))
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
 
 # obs flow data
