@@ -67,5 +67,13 @@ source(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal20150
 source(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/devel/estimate-flow.R")
 
 # remove Yaquina data
-rm(df.flow.est)
+rm(df.flow.obs)
 
+# get flow data within the simulation period and simplify data.frame
+df.flow <- df.flow.est[ df.flow.est$date >= dt.sim.bg &
+                          df.flow.est$date <= dt.sim.ed, 
+                        c("date", "mean_daily_flow_cfs")]
+names(df.flow) <- c("date", "flow_cfs")
+
+# remove Big Elk Creek original data.frame
+rm(df.flow.est)
