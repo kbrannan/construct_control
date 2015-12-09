@@ -77,3 +77,25 @@ names(df.flow) <- c("date", "flow_cfs")
 
 # remove Big Elk Creek original data.frame
 rm(df.flow.est)
+
+# get PEST control file
+
+# zipfile path and name
+tmp.dir <- "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/Hydro Calibration/Files from Cadmus"
+tmp.zip <- "Final_Deliverables_EPA_July2012.zip"
+
+# get list of files in the zipfile
+tmp.fns <- unzip(zipfile = paste0(tmp.dir,"/", tmp.zip), list = TRUE)
+
+# see how many occurances there are of the control file in the zipfile
+grep("control.pst", tmp.fns$Name, value = TRUE)
+
+# only one, I'll use it
+tmp.file <- "Final_Deliverables_EPA_July2012/PEST_end/control.pst"
+
+# read the PEST control file as a character vector
+str.control <- scan(unz(paste0(tmp.dir,"/", tmp.zip),
+                        tmp.file
+                        )
+, sep = "\n", what = character()
+)
