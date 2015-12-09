@@ -4,6 +4,9 @@
 # transparency
 # created Kevin Brannan 2015-12-08
 
+# load packages
+library(devtools)
+
 # simulation period determined from updated meteo data. The files are in a 
 # zipfile. The HSPF UCI file for the extended simulation period is extracted 
 # from the zipfile and the begin and end dates of the simulation are taken from
@@ -15,15 +18,15 @@ tmp.zip <- "HSPF&WDMfiles.zip"
 # get list of files in the zipfile
 tmp.fns <- unzip(zipfile = paste0(tmp.dir,tmp.zip), list = TRUE)
 
-# read the uci file for the extended simulation period in as a character vector
-tmp.uci <- scan(unz(paste0(tmp.dir,tmp.zip),
+# read the uci file as a character vector
+str.uci <- scan(unz(paste0(tmp.dir,tmp.zip),
                     grep("*.extend.*\\.uci$", tmp.fns[ , 1], value=TRUE)
                     )
                 , sep = "\n", what = character()
                 )
 
 # get the line in the UCI that has the begin and end dates of the simulation
-tmp.str <- grep("START", tmp.uci, value=TRUE)
+tmp.str <- grep("START", str.uci, value=TRUE)
 
 # get begin date
 dt.sim.bg <- as.POSIXct(
@@ -41,4 +44,28 @@ dt.sim.ed <- as.POSIXct(
 rm(list=ls(pattern = "^tmp\\..*"))
 
 
-# obs flow data
+# flow data
+# CANNOT get the ssh authentification to work
+# use scripts from the Select_Storm_HydCal repo to get observed flow and estimate the
+# flow for Big Elk Creek
+# library(RCurl)
+# 
+# x <- scp(host = "www.github.com", 
+#          path = "Select_Storm_HydCal/devel/get-obs-flow-data.R", 
+#          user = "kbrannan",
+#          key = "~/.ssh/id_rsa_Git_Bash"
+#            )
+# 
+# x <- getURL("https://raw.github.com/kbrannan/Select_Storm_HydCal/master/devel/get-obs-flow-data.R")
+# y <- read.csv(text = x)
+# use the script from Select_Storm_HydCal on local server to get flow data
+
+# get obs flow from Yaquina River gage
+source(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/devel/get-obs-flow-data.R")
+
+# estimate flow for Big Elk Creek from Yaquina River Gage
+source(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/devel/estimate-flow.R")
+
+# remove Yaquina data
+rm(df.flow.est)
+
