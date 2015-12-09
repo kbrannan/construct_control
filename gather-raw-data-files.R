@@ -99,3 +99,12 @@ str.control <- scan(unz(paste0(tmp.dir,"/", tmp.zip),
                         )
 , sep = "\n", what = character()
 )
+strsplit(gsub(" {1,}", ",",str.control[4]), split = ",")[[1]][3]
+
+tmp.blk.hd <- grep("\\*", str.control)
+
+tmp.blk.hd[grep("[Oo]bs.*[Gg]roups", str.control[tmp.blk.hd])]
+
+grep("\\*",
+     str.control[grep("observation data", str.control) + 1:length(str.control)],
+     value = TRUE)
