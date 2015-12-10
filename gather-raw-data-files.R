@@ -4,9 +4,6 @@
 # transparency
 # created Kevin Brannan 2015-12-08
 
-# load packages
-library(devtools)
-
 # simulation period determined from updated meteo data. The files are in a 
 # zipfile. The HSPF UCI file for the extended simulation period is extracted 
 # from the zipfile and the begin and end dates of the simulation are taken from
@@ -48,6 +45,7 @@ rm(list=ls(pattern = "^tmp\\..*"))
 # CANNOT get the ssh authentification to work
 # use scripts from the Select_Storm_HydCal repo to get observed flow and estimate the
 # flow for Big Elk Creek
+# library(devtools)
 # library(RCurl)
 # 
 # x <- scp(host = "www.github.com", 
@@ -104,13 +102,31 @@ str.control <- scan(unz(paste0(tmp.dir,"/", tmp.zip),
 
 # get rows where the block names are
 tmp.blk.hd <- grep("\\*", str.control)
-
 str.obs.grp.names <- 
   str.control[(tmp.blk.hd[grep("[Oo]bs.*[Gg]roups", 
                                str.control[tmp.blk.hd])] + 1):
               (tmp.blk.hd[grep("[Oo]bs.*[Gg]roups", 
                               str.control[tmp.blk.hd]) + 1] - 1)]
 
-grep("\\*",
-     str.control[grep("observation data", str.control) + 1:length(str.control)],
-     value = TRUE)
+# clean up
+rm(list = ls(pattern = "^tmp\\..*"))
+
+# create vector strings of output for each observation group
+
+# mlog - log10 of daily flow in cfs. addedd 0.0001 cfs in case there are 0 flows
+
+# get flow data and apply log10 transform
+tmp.data <- log10(df.flow$flow_cfs + 0.0001)
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[1]
+
+# get first occrence of observation in group to see format
+grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
+
+# format of line
+# "mlog_1                 1.797268        5.564000E-02  mlog"
+tmp.num <- 1:length(tmp.data)
+paste0("%",nchar(length(tmp.data)),"i")
+sprintf(fmt = "%1.5E", tmp.data[1])
+
