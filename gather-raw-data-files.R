@@ -198,9 +198,40 @@ tmp.data <- tmp.data[tmp.data$date >= dt.sim.bg &
 
 min(tmp.data$date) == dt.sim.bg
 max(tmp.data$date) == dt.sim.ed
+
+# remove origincal hysep results
+rm(df.hysep88.8)
+
 # get the prefix for the observation in the group, which is the group name
 tmp.grp <- str.obs.grp.names[3]
 
+# calculate baseflow index
+tmp.bfi <- round(sum(tmp.data$baseflow) / sum(tmp.data$flow), 4)
 
-# check date range of hysep analysis
-min(tmp.d)
+
+# reset tmp.data to the baseflow index data to be consitent with earlier names
+# in commands to write lines
+tmp.data <- tmp.bfi
+
+# get first occrence of observation in group to see format
+grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
+
+# format of line
+# "mbaseind_1            0.4400000         1.00000      mbaseind"
+
+# create sequence for number of obs
+tmp.num <- 1:length(tmp.data)
+
+# write lines of obs data for mlog to a data.frame
+df.baseind <- data.frame(line = 
+                         paste0(tmp.grp, "_", 
+                                sprintf(fmt = paste0("%", 
+                                                     paste0("0",
+                                                            nchar(length(tmp.data))),"i"), 
+                                        tmp.num[tmp.num]),
+                                "              ",
+                                sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
+                                "     1.000000E+00  ", tmp.grp),
+                       stringsAsFactors = FALSE
+)
+
