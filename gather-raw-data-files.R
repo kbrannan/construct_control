@@ -126,14 +126,23 @@ grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
 
 # format of line
 # "mlog_1                 1.797268        5.564000E-02  mlog"
+
+# create sequence for number of obs
 tmp.num <- 1:length(tmp.data)
 
-sprintf(fmt = "%04i", 1)
+# write lines of obs data for mlog to a data.frame
+df.mlog <- data.frame(line = 
+                         paste0(tmp.grp, "_", 
+                                sprintf(fmt = paste0("%", 
+                                                     paste0("0",
+                                                            nchar(length(tmp.data))),"i"), 
+                                        tmp.num[tmp.num]),
+                                "              ",
+                                sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
+                                "     1.000000E+00  ", tmp.grp)
+)
 
-paste0(tmp.grp, "_", 
-sprintf(fmt = paste0("%", paste0("0",nchar(length(tmp.data))),"i"), tmp.num[1]),
-"              ",
-sprintf(fmt = "%1.5E", tmp.data[1]),
-"     1.000000E+00  ",
-tmp.grp)
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
 
