@@ -127,6 +127,13 @@ grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
 # format of line
 # "mlog_1                 1.797268        5.564000E-02  mlog"
 tmp.num <- 1:length(tmp.data)
-paste0("%",nchar(length(tmp.data)),"i")
-sprintf(fmt = "%1.5E", tmp.data[1])
+
+sprintf(fmt = "%04i", 1)
+
+paste0(tmp.grp, "_", 
+sprintf(fmt = paste0("%", paste0("0",nchar(length(tmp.data))),"i"), tmp.num[1]),
+"              ",
+sprintf(fmt = "%1.5E", tmp.data[1]),
+"     1.000000E+00  ",
+tmp.grp)
 
