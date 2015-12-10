@@ -235,3 +235,78 @@ df.baseind <- data.frame(line =
                        stringsAsFactors = FALSE
 )
 
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
+
+
+# mpeak and mvol_stm - flow peaks and volumes for the storms. this was done in 
+# the "Select_Storm_HydCal" repo. I will read in the file "strm_peaks_vols.dat"
+# that is the output from the storm selection
+
+# get storm data
+tmp.data <- scan(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/strm_peaks_vols.dat",
+                 what = "character",
+                 sep = "\n")
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[4]
+
+# get the mpeak lines and put in a data.frame
+df.mpeak <- data.frame(line = grep(paste0(".*", tmp.grp, "$"), tmp.data,
+                                   value = TRUE),
+                       stringsAsFactors = FALSE
+)
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[8]
+
+# get the mvol_stm lines and put in a data.frame
+df.mvol_stm <- data.frame(line = grep(paste0(".*", tmp.grp, "$"), tmp.data,
+                                      value = TRUE),
+                       stringsAsFactors = FALSE
+)
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
+# convert flow from cfs to ac-ft/day
+df.flow <- cbind(df.flow, 
+                 flow_acft = df.flow$flow_cfs * 3600 * (1 / 24) * (1 / 43560))
+
+# for flow volumes I will use factors to get sums. Using doBy package to dothis
+library(doBy)
+
+# mvol_ann - annual flow volume in ac-ft
+
+# get flow data and add factors for year and month
+tmp.data <- cbind(df.flow, year=strftime(df.flow$date, format = "%Y"),
+                  month = strftime(df.flow$date, format = "%b"))
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[5]
+
+# get first occrence of observation in group to see format
+grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
+
+# format of line
+# "mvol_ann_1            1.9271139E+10    1.000000E-02  mvol_ann"
+
+# create sequence for number of obs
+tmp.num <- 1:length(tmp.data)
+
+# write lines of obs data for mlog to a data.frame
+df.mflow <- data.frame(line = 
+                         paste0(tmp.grp, "_", 
+                                sprintf(fmt = paste0("%", 
+                                                     paste0("0",
+                                                            nchar(length(tmp.data))),"i"), 
+                                        tmp.num[tmp.num]),
+                                "              ",
+                                sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
+                                "     1.000000E+00  ", tmp.grp),
+                       stringsAsFactors = FALSE
+)
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
