@@ -139,10 +139,68 @@ df.mlog <- data.frame(line =
                                         tmp.num[tmp.num]),
                                 "              ",
                                 sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
-                                "     1.000000E+00  ", tmp.grp)
+                                "     1.000000E+00  ", tmp.grp),
+                      stringsAsFactors = FALSE
 )
 
 # clean up
 rm(list=ls(pattern = "^tmp\\..*"))
 
+# mflow - daily flow in cfs
 
+# get flow data
+tmp.data <- df.flow$flow_cfs
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[2]
+
+# get first occrence of observation in group to see format
+grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
+
+# format of line
+# "mflow_1                62.70000         0.00000      mflow"
+
+# create sequence for number of obs
+tmp.num <- 1:length(tmp.data)
+
+# write lines of obs data for mlog to a data.frame
+df.mflow <- data.frame(line = 
+                        paste0(tmp.grp, "_", 
+                               sprintf(fmt = paste0("%", 
+                                                    paste0("0",
+                                                           nchar(length(tmp.data))),"i"), 
+                                       tmp.num[tmp.num]),
+                               "              ",
+                               sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
+                               "     1.000000E+00  ", tmp.grp),
+                      stringsAsFactors = FALSE
+)
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
+# mbaseind - baseflow index
+# output from the hysep analysis in "select-storms-hysep.R" which is in the 
+# Select_Storm_HydCal repo is used to calculate the baseflow index
+
+# get hysep results
+load(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/hysep88_8.RData")
+
+# get flow and base flow data
+tmp.data <- df.hysep88.8[ , c("Dates", "BaseQ", "Flow")]
+names(tmp.data) <- c("date", "baseflow", "flow")
+
+tmp.data$date <- as.POSIXct(format(tmp.data$date, "%Y-%m-%d"))
+
+# make sure data is witin simulation begin and end dates
+tmp.data <- tmp.data[tmp.data$date >= dt.sim.bg &
+                     tmp.data$date <= dt.sim.ed, ]
+
+min(tmp.data$date) == dt.sim.bg
+max(tmp.data$date) == dt.sim.ed
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[3]
+
+
+# check date range of hysep analysis
+min(tmp.d)
