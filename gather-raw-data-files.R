@@ -280,7 +280,7 @@ library(doBy)
 # mvol_ann - annual flow volume in ac-ft
 
 # get flow data and add factors for year and month
-tmp.data <- cbind(df.flow, year=strftime(df.flow$date, format = "%Y"),
+df.flow.exp <- cbind(df.flow, year=strftime(df.flow$date, format = "%Y"),
                   month = strftime(df.flow$date, format = "%b"))
 
 # get the prefix for the observation in the group, which is the group name
@@ -292,18 +292,21 @@ grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
 # format of line
 # "mvol_ann_1            1.9271139E+10    1.000000E-02  mvol_ann"
 
+# get sum for group
+tmp.data <- summaryBy(flow_acft ~ year, data = df.flow.exp, FUN = sum)
+
 # create sequence for number of obs
-tmp.num <- 1:length(tmp.data)
+tmp.num <- 1:length(tmp.data[ , 2])
 
 # write lines of obs data for mlog to a data.frame
-df.mflow <- data.frame(line = 
+df.mvol_ann <- data.frame(line = 
                          paste0(tmp.grp, "_", 
                                 sprintf(fmt = paste0("%", 
                                                      paste0("0",
-                                                            nchar(length(tmp.data))),"i"), 
+                                                            nchar(length(tmp.data[, 2]))),"i"), 
                                         tmp.num[tmp.num]),
                                 "              ",
-                                sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
+                                sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                 "     1.000000E+00  ", tmp.grp),
                        stringsAsFactors = FALSE
 )
