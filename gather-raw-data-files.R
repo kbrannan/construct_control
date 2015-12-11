@@ -426,3 +426,8 @@ df.mtime <- data.frame(line =
 
 # clean up
 rm(list=ls(pattern = "^tmp\\..*"))
+
+# save data.frames for observations in PEST control
+save(list = c("df.mlog", "df.mflow", "df.mpeak", "df.baseind", "df.mvol_ann",
+              "df.mvol_smr", "df.mvol_wtr", "df.mvol_stm", "mtime"), 
+     file = "obs-blocks.RData")
