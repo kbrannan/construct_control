@@ -316,7 +316,6 @@ rm(list=ls(pattern = "^tmp\\..*"))
 
 # mvol_smr - summer (Jun - Aug) flow volume in ac-ft by year
 
-
 # get the prefix for the observation in the group, which is the group name
 tmp.grp <- str.obs.grp.names[6]
 
@@ -326,10 +325,11 @@ grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
 # format of line
 # "mvol_smr_1            4.2016752E+08    1.000000E-02  mvol_smr"
 
-# add factor for summer
+# get sums for months
 tmp.month.year <- summaryBy(flow_acft ~ month + year, data = df.flow.exp,
                             FUN = sum)
 
+# get summary for season
 tmp.data <- summaryBy(flow_acft.sum ~ year,
                       data = tmp.month.year[as.character(tmp.month.year$month) 
                                             %in% c("Jun", "Jul", "Aug"), ],
@@ -340,6 +340,47 @@ tmp.num <- 1:length(tmp.data[ , 2])
 
 # write lines of obs data for mvol_smr to a data.frame
 df.mvol_smr <- data.frame(line = 
+                            paste0(tmp.grp, "_", 
+                                   sprintf(fmt = paste0("%", 
+                                                        paste0("0",
+                                                               nchar(length(tmp.data[, 2]))),"i"), 
+                                           tmp.num[tmp.num]),
+                                   "              ",
+                                   sprintf(fmt = "%1.5E", tmp.data[, 2]),
+                                   "     1.000000E+00  ", tmp.grp),
+                          stringsAsFactors = FALSE
+)
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
+
+# mvol_wtr - winter (Dec - Feb) flow volume in ac-ft by year
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[7]
+
+# get first occrence of observation in group to see format
+grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
+
+# format of line
+# "mvol_wtr_1            9.6252621E+09    1.000000E-02  mvol_wtr"
+
+# get sums for months
+tmp.month.year <- summaryBy(flow_acft ~ month + year, data = df.flow.exp,
+                            FUN = sum)
+
+# get summary for season
+tmp.data <- summaryBy(flow_acft.sum ~ year,
+                      data = tmp.month.year[as.character(tmp.month.year$month) 
+                                            %in% c("Dec", "Jan", "Feb"), ],
+                      FUN = sum)
+
+# create sequence for number of obs
+tmp.num <- 1:length(tmp.data[ , 2])
+
+# write lines of obs data for mvol_smr to a data.frame
+df.mvol_wtr <- data.frame(line = 
                             paste0(tmp.grp, "_", 
                                    sprintf(fmt = paste0("%", 
                                                         paste0("0",
