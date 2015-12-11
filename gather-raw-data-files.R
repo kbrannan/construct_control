@@ -394,3 +394,35 @@ df.mvol_wtr <- data.frame(line =
 
 # clean up
 rm(list=ls(pattern = "^tmp\\..*"))
+
+# mtime - % exceedance for flow, using 1%, 5%, 10%, 25%, 50%, 75%, 95%, 99%
+# this is different than what Cadmus using in tsproc which is the fraction
+# of tiime the flow is above some value. I am not going to use tsproc when
+# doinmg the calculations. I will use R script
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[9]
+
+# percents used
+tmp.per <- c(0.0001, 0.01, 0.05, 0.25, 0.50, 0.75, 0.95, 0.99)
+
+tmp.data <- quantile(x = df.flow$flow_cfs, probs = tmp.per)
+
+# create sequence for number of obs
+tmp.num <- 1:length(tmp.data)
+
+# write lines of obs data for mtime to a data.frame
+df.mtime <- data.frame(line = 
+                            paste0(tmp.grp, "_", 
+                                   sprintf(fmt = paste0("%", 
+                                                        paste0("0",
+                                                               nchar(length(tmp.data))),"i"), 
+                                           tmp.num[tmp.num]),
+                                   "              ",
+                                   sprintf(fmt = "%1.5E", tmp.data),
+                                   "     1.000000E+00  ", tmp.grp),
+                          stringsAsFactors = FALSE
+)
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
