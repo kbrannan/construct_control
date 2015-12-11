@@ -298,7 +298,7 @@ tmp.data <- summaryBy(flow_acft ~ year, data = df.flow.exp, FUN = sum)
 # create sequence for number of obs
 tmp.num <- 1:length(tmp.data[ , 2])
 
-# write lines of obs data for mlog to a data.frame
+# write lines of obs data for mvol_ann to a data.frame
 df.mvol_ann <- data.frame(line = 
                          paste0(tmp.grp, "_", 
                                 sprintf(fmt = paste0("%", 
@@ -309,6 +309,46 @@ df.mvol_ann <- data.frame(line =
                                 sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                 "     1.000000E+00  ", tmp.grp),
                        stringsAsFactors = FALSE
+)
+
+# clean up
+rm(list=ls(pattern = "^tmp\\..*"))
+
+# mvol_smr - summer (Jun - Aug) flow volume in ac-ft by year
+
+
+# get the prefix for the observation in the group, which is the group name
+tmp.grp <- str.obs.grp.names[6]
+
+# get first occrence of observation in group to see format
+grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
+
+# format of line
+# "mvol_smr_1            4.2016752E+08    1.000000E-02  mvol_smr"
+
+# add factor for summer
+tmp.month.year <- summaryBy(flow_acft ~ month + year, data = df.flow.exp,
+                            FUN = sum)
+
+tmp.data <- summaryBy(flow_acft.sum ~ year,
+                      data = tmp.month.year[as.character(tmp.month.year$month) 
+                                            %in% c("Jun", "Jul", "Aug"), ],
+                      FUN = sum)
+
+# create sequence for number of obs
+tmp.num <- 1:length(tmp.data[ , 2])
+
+# write lines of obs data for mvol_smr to a data.frame
+df.mvol_smr <- data.frame(line = 
+                            paste0(tmp.grp, "_", 
+                                   sprintf(fmt = paste0("%", 
+                                                        paste0("0",
+                                                               nchar(length(tmp.data[, 2]))),"i"), 
+                                           tmp.num[tmp.num]),
+                                   "              ",
+                                   sprintf(fmt = "%1.5E", tmp.data[, 2]),
+                                   "     1.000000E+00  ", tmp.grp),
+                          stringsAsFactors = FALSE
 )
 
 # clean up
