@@ -239,7 +239,6 @@ df.baseind <- data.frame(line =
 rm(list=ls(pattern = "^tmp\\..*"))
 
 
-
 # mpeak and mvol_stm - flow peaks and volumes for the storms. this was done in 
 # the "Select_Storm_HydCal" repo. I will read in the file "strm_peaks_vols.dat"
 # that is the output from the storm selection
@@ -431,3 +430,8 @@ rm(list=ls(pattern = "^tmp\\..*"))
 save(list = c("df.mlog", "df.mflow", "df.mpeak", "df.baseind", "df.mvol_ann",
               "df.mvol_smr", "df.mvol_wtr", "df.mvol_stm", "df.mtime"), 
      file = "obs-blocks.RData")
+
+# save HSPF-UCI and PEST-control files
+save(list = c("str.uci", "str.control"), 
+     file = "uci-control.RData")
+
