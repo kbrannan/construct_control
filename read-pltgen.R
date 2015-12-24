@@ -17,3 +17,26 @@ str.pltgen <- scan(file = paste0(str.dir,str.file), sep = "\n",
 ## hourly data. take min just incase
 lng.str <- min(grep("^( ){1,}To.*-1.0000000E\\+30{1,}$", str.pltgen) + 1)
 
+## get data only from orginal PLTGEN file
+str.data <- str.pltgen[lng.str:length(str.pltgen)]
+
+
+## get variable names from PLTGEN file
+## get line where the variable name list starts
+lng.name.str <- grep("^( ){1,}To( ){1,}Label( ){1,}LINTYP", 
+                 str.pltgen[1:lng.str]) + 1
+
+## get line where the variable name list ends
+lng.name.end <- min(grep("^( ){1,}To$", str.pltgen[1:lng.str])) - 1
+
+## get variable names
+str.var.names <- do.call(rbind,
+                         lapply(str.pltgen[lng.name.str:lng.name.end],
+                                function(x){
+                                  y <- gsub("( ){3,}.*","", 
+                                            gsub("^( ){1,}To( ){1,}" , "", x))
+                                  z <- gsub(" ", ".", y)
+                                  return(z)
+                                  }
+                                )
+                         )
