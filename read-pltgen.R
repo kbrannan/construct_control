@@ -40,3 +40,24 @@ str.var.names <- do.call(rbind,
                                   }
                                 )
                          )
+
+## get data in dtat frame
+## fisrt get data as characters
+df.data.chr <- data.frame(do.call(rbind,
+                              strsplit(x = gsub("( ){1,}24( ){1,}0", " ",
+                                                gsub("^( ){1,}To( ){1,}", "",
+                                                     str.data))
+                                       , split = "( ){1,}")),
+                      stringsAsFactors = FALSE)
+## rename variables in the data frame to names in PLTGEN file
+names(df.data.chr) <- c("year", "month", "day", str.var.names)
+
+## create data frame with date and numeric values
+df.data <- cbind(date = 
+                   as.POSIXct(
+                     apply(df.data.chr[, 1:3], 
+                           1, function(x) paste0(x, collapse = "-"))), 
+                 transform(df.data.chr, 
+                           as.numeric(str.var.names))
+                 [ , 4:length(names(df.data.chr))]
+                 )
