@@ -53,11 +53,14 @@ df.data.chr <- data.frame(do.call(rbind,
 names(df.data.chr) <- c("year", "month", "day", str.var.names)
 
 ## create data frame with date and numeric values
-df.data <- cbind(date = 
-                   as.POSIXct(
-                     apply(df.data.chr[, 1:3], 
+tmp.flows <- df.data.chr[, c(-1, -2, -3)]
+for(ii in 1:length(tmp.flows[1, ])) {
+  tmp.flows[ , ii] <- as.numeric(tmp.flows[ , ii])
+}
+tmp.date <- as.POSIXct(apply(df.data.chr[, 1:3], 
                            1, function(x) paste0(x, collapse = "-"))), 
-                 transform(df.data.chr, 
-                           as.numeric(str.var.names))
-                 [ , 4:length(names(df.data.chr))]
+                           transform(df.data.chr[, c(-1, -2, -3)], as.numeric)
                  )
+
+junk <- as.numeric(df.data.chr[ , str.var.names[5]])
+str(junk)
