@@ -58,9 +58,6 @@ for(ii in 1:length(tmp.flows[1, ])) {
   tmp.flows[ , ii] <- as.numeric(tmp.flows[ , ii])
 }
 tmp.date <- as.POSIXct(apply(df.data.chr[, 1:3], 
-                           1, function(x) paste0(x, collapse = "-"))), 
-                           transform(df.data.chr[, c(-1, -2, -3)], as.numeric)
-                 )
+                           1, function(x) paste0(x, collapse = "-")))
 
-junk <- as.numeric(df.data.chr[ , str.var.names[5]])
-str(junk)
+df.data <- cbind(tmp.date, tmp.flows)
