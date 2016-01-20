@@ -396,7 +396,7 @@ rm(list=ls(pattern = "^tmp\\..*"))
 
 # mtime - % exceedance for flow, using 1%, 5%, 10%, 25%, 50%, 75%, 95%, 99%
 # this is different than what Cadmus using in tsproc which is the fraction
-# of tiime the flow is above some value. I am not going to use tsproc when
+# of time the flow is above some value. I am not going to use tsproc when
 # doinmg the calculations. I will use R script
 
 # get the prefix for the observation in the group, which is the group name
