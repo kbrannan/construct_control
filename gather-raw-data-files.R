@@ -137,7 +137,7 @@ df.mlog <- data.frame(line =
                                                      paste0("0",
                                                             nchar(length(tmp.data))),"i"), 
                                         tmp.num[tmp.num]),
-                                "              ",
+                                "               ",
                                 sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
                                 "     1.000000E+00  ", tmp.grp),
                       stringsAsFactors = FALSE
@@ -247,6 +247,9 @@ rm(list=ls(pattern = "^tmp\\..*"))
 tmp.data <- scan(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/strm_peaks_vols.dat",
                  what = "character",
                  sep = "\n")
+
+# get rid of a leading space
+tmp.data <- gsub("^ {1}","",tmp.data)
 
 # get the prefix for the observation in the group, which is the group name
 tmp.grp <- str.obs.grp.names[4]
