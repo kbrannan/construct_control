@@ -2,6 +2,10 @@
 ## from the hydro cal uci file
 ## created 2015-12-24 by Kevin Brannan
 
+## set the working durectory
+setwd("m:/models/bacteria/hspf/HydroCal201506/R_Projs/construct_control")
+
+
 ## set path for the PLTGEN file
 str.dir <- paste0(getwd(), "/ODEQ_hspf/extended period/")
 
