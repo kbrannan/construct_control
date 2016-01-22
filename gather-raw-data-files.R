@@ -137,7 +137,7 @@ df.mlog <- data.frame(line =
                                                      paste0("0",
                                                             nchar(length(tmp.data))),"i"), 
                                         tmp.num[tmp.num]),
-                                "              ",
+                                "               ",
                                 sprintf(fmt = "%1.5E", tmp.data[tmp.num]),
                                 "     1.000000E+00  ", tmp.grp),
                       stringsAsFactors = FALSE
@@ -223,7 +223,7 @@ grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
 tmp.num <- 1:length(tmp.data)
 
 # write lines of obs data for mlog to a data.frame
-df.baseind <- data.frame(line = 
+df.mbaseind <- data.frame(line = 
                          paste0(tmp.grp, "_", 
                                 sprintf(fmt = paste0("%", 
                                                      paste0("0",
@@ -247,6 +247,9 @@ rm(list=ls(pattern = "^tmp\\..*"))
 tmp.data <- scan(file = "//deqhq1/tmdl/TMDL_WR/MidCoast/Models/Bacteria/HSPF/HydroCal201506/R_projs/Select_Storm_HydCal/strm_peaks_vols.dat",
                  what = "character",
                  sep = "\n")
+
+# get rid of a leading space
+tmp.data <- gsub("^ {1}","",tmp.data)
 
 # get the prefix for the observation in the group, which is the group name
 tmp.grp <- str.obs.grp.names[4]
@@ -304,7 +307,7 @@ df.mvol_ann <- data.frame(line =
                                                      paste0("0",
                                                             nchar(length(tmp.data[, 2]))),"i"), 
                                         tmp.num[tmp.num]),
-                                "              ",
+                                "             ",
                                 sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                 "     1.000000E+00  ", tmp.grp),
                        stringsAsFactors = FALSE
@@ -344,7 +347,7 @@ df.mvol_smr <- data.frame(line =
                                                         paste0("0",
                                                                nchar(length(tmp.data[, 2]))),"i"), 
                                            tmp.num[tmp.num]),
-                                   "              ",
+                                   "             ",
                                    sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                    "     1.000000E+00  ", tmp.grp),
                           stringsAsFactors = FALSE
@@ -378,14 +381,14 @@ tmp.data <- summaryBy(flow_acft.sum ~ year,
 # create sequence for number of obs
 tmp.num <- 1:length(tmp.data[ , 2])
 
-# write lines of obs data for mvol_smr to a data.frame
+# write lines of obs data for mvol_wtr to a data.frame
 df.mvol_wtr <- data.frame(line = 
                             paste0(tmp.grp, "_", 
                                    sprintf(fmt = paste0("%", 
                                                         paste0("0",
                                                                nchar(length(tmp.data[, 2]))),"i"), 
                                            tmp.num[tmp.num]),
-                                   "              ",
+                                   "             ",
                                    sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                    "     1.000000E+00  ", tmp.grp),
                           stringsAsFactors = FALSE
@@ -396,7 +399,7 @@ rm(list=ls(pattern = "^tmp\\..*"))
 
 # mtime - % exceedance for flow, using 1%, 5%, 10%, 25%, 50%, 75%, 95%, 99%
 # this is different than what Cadmus using in tsproc which is the fraction
-# of tiime the flow is above some value. I am not going to use tsproc when
+# of time the flow is above some value. I am not going to use tsproc when
 # doinmg the calculations. I will use R script
 
 # get the prefix for the observation in the group, which is the group name
@@ -417,7 +420,7 @@ df.mtime <- data.frame(line =
                                                         paste0("0",
                                                                nchar(length(tmp.data))),"i"), 
                                            tmp.num[tmp.num]),
-                                   "              ",
+                                   "                 ",
                                    sprintf(fmt = "%1.5E", tmp.data),
                                    "     1.000000E+00  ", tmp.grp),
                           stringsAsFactors = FALSE
@@ -427,7 +430,7 @@ df.mtime <- data.frame(line =
 rm(list=ls(pattern = "^tmp\\..*"))
 
 # save data.frames for observations in PEST control
-save(list = c("df.mlog", "df.mflow", "df.mpeak", "df.baseind", "df.mvol_ann",
+save(list = c("df.mlog", "df.mflow", "df.mpeak", "df.mbaseind", "df.mvol_ann",
               "df.mvol_smr", "df.mvol_wtr", "df.mvol_stm", "df.mtime"), 
      file = "obs-blocks.RData")
 
