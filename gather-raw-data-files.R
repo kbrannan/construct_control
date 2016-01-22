@@ -223,7 +223,7 @@ grep(paste0(tmp.grp,".*"), str.control, value = TRUE)[2]
 tmp.num <- 1:length(tmp.data)
 
 # write lines of obs data for mlog to a data.frame
-df.baseind <- data.frame(line = 
+df.mbaseind <- data.frame(line = 
                          paste0(tmp.grp, "_", 
                                 sprintf(fmt = paste0("%", 
                                                      paste0("0",
