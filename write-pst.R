@@ -12,9 +12,22 @@ lng.og <- grep("\\* observation groups", str.control) + 1
 lng.og.e <- lng.og + grep("\\*", str.control[lng.og:length(str.control)])[1] - 2
 chr.df.names <- paste0("df.",str.control[lng.og:lng.og.e])
 
-junk <- as.data.frame(do.call(rbind, mget(chr.df.names)))
+junk <- do.call(rbind, mget(chr.df.names))
 
-write(junk[ ,1], file = "junk.txt")
+junk <- mget(chr.df.names)
+
+junk$df.mtime
+junk$df.mbaseind
+junk$df.mvol_ann
+
+junk <- rbind(junk$df.mtime, junk$df.mbaseind)
+
+
+
+
+str(mget(chr.df.names[3]))
+
+write(junk$line, file = "junk.txt")
 
 str(junk)
 names(junk)
