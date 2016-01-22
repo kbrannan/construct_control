@@ -307,7 +307,7 @@ df.mvol_ann <- data.frame(line =
                                                      paste0("0",
                                                             nchar(length(tmp.data[, 2]))),"i"), 
                                         tmp.num[tmp.num]),
-                                "              ",
+                                "             ",
                                 sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                 "     1.000000E+00  ", tmp.grp),
                        stringsAsFactors = FALSE
@@ -347,7 +347,7 @@ df.mvol_smr <- data.frame(line =
                                                         paste0("0",
                                                                nchar(length(tmp.data[, 2]))),"i"), 
                                            tmp.num[tmp.num]),
-                                   "              ",
+                                   "             ",
                                    sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                    "     1.000000E+00  ", tmp.grp),
                           stringsAsFactors = FALSE
@@ -381,14 +381,14 @@ tmp.data <- summaryBy(flow_acft.sum ~ year,
 # create sequence for number of obs
 tmp.num <- 1:length(tmp.data[ , 2])
 
-# write lines of obs data for mvol_smr to a data.frame
+# write lines of obs data for mvol_wtr to a data.frame
 df.mvol_wtr <- data.frame(line = 
                             paste0(tmp.grp, "_", 
                                    sprintf(fmt = paste0("%", 
                                                         paste0("0",
                                                                nchar(length(tmp.data[, 2]))),"i"), 
                                            tmp.num[tmp.num]),
-                                   "              ",
+                                   "             ",
                                    sprintf(fmt = "%1.5E", tmp.data[, 2]),
                                    "     1.000000E+00  ", tmp.grp),
                           stringsAsFactors = FALSE
@@ -420,7 +420,7 @@ df.mtime <- data.frame(line =
                                                         paste0("0",
                                                                nchar(length(tmp.data))),"i"), 
                                            tmp.num[tmp.num]),
-                                   "              ",
+                                   "                 ",
                                    sprintf(fmt = "%1.5E", tmp.data),
                                    "     1.000000E+00  ", tmp.grp),
                           stringsAsFactors = FALSE
