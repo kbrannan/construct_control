@@ -14,6 +14,16 @@ chr.df.names <- paste0("df.",str.control[lng.og:lng.og.e])
 
 junk <- do.call(rbind, mget(chr.df.names))
 
+
+system.time(write.table(junk$line, file = "junk.txt", row.names = FALSE, col.names = FALSE,
+            quote = FALSE)
+)
+
+get.row <- function(x) eval(parse(text=paste0(x,"$line[1]")))
+
+cat(do.call(rbind,lapply(chr.df.names, get.row)),file = "get_row.txt",sep = "\n")
+
+
 junk <- mget(chr.df.names)
 
 junk$df.mtime
@@ -22,18 +32,28 @@ junk$df.mvol_ann
 
 junk <- rbind(junk$df.mtime, junk$df.mbaseind)
 
+junk.m <- as.matrix(junk$line)
 
+junk.v <- as.vector(junk$line)
 
 
 str(mget(chr.df.names[3]))
 
-write(junk$line, file = "junk.txt")
+system.time(write.table(junk$line, file = "junk.txt"))
+
+system.time(write(junk$line, file = "junk.txt"))
+
+system.time(write(junk.m, file = "junk_m.txt"))
+
+system.time(write(junk.v, file = "junk_v.txt"))
+
+system.time(cat(junk$line, file = "junk.txt", sep="\n"))
 
 str(junk)
 names(junk)
 
 
-cat(junk, file = "junk.txt", sep="\n")
+cat(junk$line, file = "junk.txt", sep="\n")
 
 tail(junk, 100)
 
