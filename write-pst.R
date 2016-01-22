@@ -7,16 +7,14 @@ load(file=paste0(chr.dir,"/","obs-blocks.RData"))
 ## load uci and PEST-control files processed by "gather-raw-data-files.R"
 load(file = paste0(chr.dir, "/", "uci-control.RData"))
 
+## combine the dfs to form the block of obs 
 
-head(str.control, 25)
+
+lng.og <- grep("\\* observation groups", str.control)
+lng.og.e <- lng.og + grep("\\*", str.control[lng.og + 1:length(str.control)])[1] - 1
+
+str.control[lng.og:lng.og.e]
 
 ## get number of observation groups
-junk <- rbind(ls(patter = "^df\\..*"))
+junk <- rbind(ls(pattern = "^df\\..*"))
 
-dfs <- Filter(function(x) is(x, "data.frame"), mget(ls()))
-
-junk <- do.call(rbind,mget(ls(patter = "^df\\..*")))
-
-lil_junk <- junk[sample(nrow(junk),size = 100, replace = TRUE),1]
-
-gsub("^.*")
