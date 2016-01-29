@@ -14,18 +14,30 @@ chr.df.names <- paste0("df.",str.control[lng.og:lng.og.e])
 ## combine blocks
 df.obs.block <- do.call(rbind, mget(chr.df.names))
 
+grep("mbaseind_", str.control, value = TRUE)
+
+grep("mbaseind_", df.obs.block$line, value = TRUE)
+
+## insert new block of observations into the control
+str.control.new <- c(str.control[1:(lng.og - 1)], 
+                          paste0(df.obs.block[ ,1]),
+                          str.control[(lng.og.e + 1):length(str.control)])
+
+grep("mbaseind_", str.control.new)
+
+## update the number of observation in control
 ## get number of obs
 lng.n.obs <- length(df.obs.block$line)
 
 ## set number of observations
-chr.ln <- str.control[4]
+chr.ln <- str.control.new[4]
 
 # substitute the new number of observations
 chr.ln.new <- gsub("[0-9]{4,}",as.character(lng.n.obs), chr.ln)
 
 ## put new line in control file
-str.control[4] <- chr.ln.new
+str.control.new[4] <- chr.ln.new
 
 ## write updated control file
-write.table(str.control, file = "new.pst", row.names = FALSE, col.names = FALSE,
-            quote = FALSE)
+write.table(str.control.new, file = paste0(chr.dir,"/new.pst"), 
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
