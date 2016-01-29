@@ -19,11 +19,12 @@ grep("mbaseind_", str.control, value = TRUE)
 grep("mbaseind_", df.obs.block$line, value = TRUE)
 
 ## insert new block of observations into the control
-str.control.new <- c(str.control[1:(lng.og - 1)], 
+lng.obs.st <- grep("\\* observation data" ,str.control)
+lng.obs.ed <- lng.obs.st + min(grep("\\* " , 
+                       str.control[(lng.obs.st + 1):length(str.control)]))
+str.control.new <- c(str.control[1:lng.obs.st], 
                           paste0(df.obs.block[ ,1]),
-                          str.control[(lng.og.e + 1):length(str.control)])
-
-grep("mbaseind_", str.control.new)
+                          str.control[lng.obs.ed:length(str.control)])
 
 ## update the number of observation in control
 ## get number of obs
