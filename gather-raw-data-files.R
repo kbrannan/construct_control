@@ -272,9 +272,10 @@ df.mvol_stm <- data.frame(line = grep(paste0(".*", tmp.grp, "$"), tmp.data,
 # clean up
 rm(list=ls(pattern = "^tmp\\..*"))
 
-# convert flow from cfs to ac-ft/day
+# convert flow from cfs to ac-ft/day, 1 day = 86400 sec and 
+# 1 ac-ft = 43559.9 cu ft
 df.flow <- cbind(df.flow, 
-                 flow_acft = df.flow$flow_cfs * 3600 * (1 / 24) * (1 / 43560))
+                 flow_acft = df.flow$flow_cfs * 86400 * (1 / 43559.9))
 
 # for flow volumes I will use factors to get sums. Using doBy package to dothis
 library(doBy)
