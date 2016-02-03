@@ -4,6 +4,10 @@
 # transparency
 # created Kevin Brannan 2015-12-08
 
+## set path
+chr.dir <- "m:/models/bacteria/hspf/HydroCal201506/R_Projs/construct_control"
+
+
 # simulation period determined from updated meteo data. The files are in a 
 # zipfile. The HSPF UCI file for the extended simulation period is extracted 
 # from the zipfile and the begin and end dates of the simulation are taken from
@@ -433,9 +437,9 @@ rm(list=ls(pattern = "^tmp\\..*"))
 # save data.frames for observations in PEST control
 save(list = c("df.mlog", "df.mflow", "df.mpeak", "df.mbaseind", "df.mvol_ann",
               "df.mvol_smr", "df.mvol_wtr", "df.mvol_stm", "df.mtime"), 
-     file = "obs-blocks.RData")
+     file = paste0(chr.dir, "/obs-blocks.RData"))
 
 # save HSPF-UCI and PEST-control files
 save(list = c("str.uci", "str.control"), 
-     file = "uci-control.RData")
+     file = paste0(chr.dir, "/uci-control.RData"))
 
